@@ -23,14 +23,35 @@ class AddEditViewController: UIViewController {
         let pickerView = UIPickerView()
         pickerView.delegate = self
         pickerView.dataSource = self
+        pickerView.backgroundColor = .white
         return pickerView
     }()
     var consolesManager = ConsolesManager.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 44))
+        toolbar.tintColor = UIColor(named: "main")
+        
+        let btnCancel = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+        let btnDone = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        let btnFlexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.items = [btnCancel, btnFlexible, btnDone]
+        
         txtConsole.inputView = pickerView
+        txtConsole.inputAccessoryView = toolbar
     }
+    
+    @objc func cancel(){
+        txtConsole.resignFirstResponder()
+    }
+    
+    @objc func done(){
+        txtConsole.text = consolesManager.consoles[pickerView.selectedRow(inComponent: 0)].name
+        cancel()
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -38,6 +59,34 @@ class AddEditViewController: UIViewController {
     }
 
     @IBAction func addEditCover(_ sender: UIButton) {
+        
+        let alert = UIAlertController(title: "Selecionar Poster", message: "De onde queres selecionar o poster?", preferredStyle: .actionSheet)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let cameraAction = UIAlertAction(title: "Câmera", style: .default) { (action:UIAlertAction) in
+                self.selectPicture(sourceType:.camera)
+            }
+            alert.addAction(cameraAction)
+        }
+        let libraryAction = UIAlertAction(title: "Biblioteca de Fotos", style: .default) { (action:UIAlertAction) in
+            self.selectPicture(sourceType:.photoLibrary)
+        }
+        alert.addAction(libraryAction)
+        let photosAction = UIAlertAction(title: "Álbuns de Fotos", style: .default) { (action:UIAlertAction) in
+            self.selectPicture(sourceType:.savedPhotosAlbum)
+        }
+        alert.addAction(photosAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancelar", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func selectPicture(sourceType:UIImagePickerController.SourceType){
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = sourceType
+        imagePicker.delegate = self
+        imagePicker.navigationBar.tintColor = UIColor(named: "main")
+        present(imagePicker, animated: true, completion: nil)
     }
     
     @IBAction func addEditGame(_ sender: UIButton) {
@@ -46,6 +95,11 @@ class AddEditViewController: UIViewController {
         }
         game.title = txtTitle.text
         game.releaseDate = dpReleasedate.date
+        game.cover = ivCover.image
+        if !txtConsole.text!.isEmpty {
+            let console = consolesManager.consoles[pickerView.selectedRow(inComponent: 0)]
+            game.console = console
+        }
         
         do {
             try context.save()
@@ -68,5 +122,14 @@ extension AddEditViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let console = consolesManager.consoles[row]
         return console.name
+    }
+}
+
+extension AddEditViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+        ivCover.image = image
+        btCover.setTitle(nil, for: .normal)
+        dismiss(animated: true, completion: nil)
     }
 }
