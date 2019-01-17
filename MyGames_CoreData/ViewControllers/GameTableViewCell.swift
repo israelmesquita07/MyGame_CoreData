@@ -24,5 +24,15 @@ class GameTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
+    func prepare(with game:Game){
+        lblTitle.text = game.title ?? ""
+        lblConsole.text = game.console?.name ?? ""
+        if let image = game.cover as? UIImage {
+            ivCover.image = image
+        }else{
+            ivCover.image = UIImage(named: "noCover")
+        }
+    }
 
 }
