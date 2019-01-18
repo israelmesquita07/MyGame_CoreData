@@ -72,12 +72,11 @@
 			children = (
 				07BA955A21F037E4008B5D1B /* AppDelegate.swift */,
 				07BA957721F0CA0F008B5D1B /* ViewControllers */,
-				07BA955E21F037E4008B5D1B /* Main.storyboard */,
+				07BA958021F17788008B5D1B /* Views */,
+				07BA958121F17791008B5D1B /* Model */,
 				07BA956421F037EC008B5D1B /* Assets.xcassets */,
-				07BA956621F037EC008B5D1B /* LaunchScreen.storyboard */,
 				07BA956921F037EC008B5D1B /* Info.plist */,
 				07BA956121F037E4008B5D1B /* MyGames_CoreData.xcdatamodeld */,
-				07BA957E21F100FA008B5D1B /* ConsolesManager.swift */,
 			);
 			path = MyGames_CoreData;
 			sourceTree = "<group>";
@@ -94,6 +93,23 @@
 				07BA957821F0CAE6008B5D1B /* GameTableViewCell.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		07BA958021F17788008B5D1B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				07BA955E21F037E4008B5D1B /* Main.storyboard */,
+				07BA956621F037EC008B5D1B /* LaunchScreen.storyboard */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		07BA958121F17791008B5D1B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				07BA957E21F100FA008B5D1B /* ConsolesManager.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
