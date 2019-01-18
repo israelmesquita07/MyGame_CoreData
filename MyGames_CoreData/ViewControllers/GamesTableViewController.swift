@@ -31,6 +31,11 @@ class GamesTableViewController: UITableViewController {
         loadGames()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+    
     func loadGames(filtering:String = ""){
         let fetchRequest:NSFetchRequest<Game> = Game.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)

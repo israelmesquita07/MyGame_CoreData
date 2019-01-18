@@ -21,7 +21,6 @@ class ConsolesTableViewController: UITableViewController {
         consolesManager.loadConsoles(with: context)
         tableView.reloadData()
     }
-
     
     @IBAction func addConsole(_ sender: Any) {
         showAlert(with: nil)
@@ -56,8 +55,20 @@ class ConsolesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return consolesManager.consoles.count
     }
-
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let console = consolesManager.consoles[indexPath.row]
+        showAlert(with: console)
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            consolesManager.deleteConsole(index: indexPath.row, context: context)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellPlat", for: indexPath)
 
